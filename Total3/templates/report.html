@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }}</title>
+  <style>
+    :root { color-scheme: light; font-family: Arial, "Noto Sans KR", sans-serif; }
+    body { max-width: 960px; margin: 0 auto; padding: 40px 24px; color: #243247; background: #f5f7fb; }
+    header { margin-bottom: 28px; }
+    h1 { margin-bottom: 8px; }
+    .generated-at { color: #667085; }
+    .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+    .card, table { background: #fff; border: 1px solid #e3e8ef; border-radius: 10px; box-shadow: 0 3px 12px rgba(36, 50, 71, .06); }
+    .card { padding: 20px; }
+    .card span { display: block; color: #667085; margin-bottom: 10px; }
+    .card strong { font-size: 1.6rem; color: #1f5fbf; }
+    table { width: 100%; border-collapse: collapse; overflow: hidden; }
+    th, td { padding: 14px 18px; text-align: left; border-bottom: 1px solid #e3e8ef; }
+    th { color: #fff; background: #315f94; }
+    td:last-child, th:last-child { text-align: right; }
+    tr:last-child td { border-bottom: 0; }
+    @media (max-width: 640px) { .kpis { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>{{ title }}</h1>
+    <div class="generated-at">생성 시각: {{ generated_at }}</div>
+  </header>
+
+  <section class="kpis" aria-label="핵심 지표">
+    <div class="card"><span>총매출</span><strong>{{ "{:,.0f}".format(kpi["총매출"]) }}원</strong></div>
+    <div class="card"><span>주문수</span><strong>{{ "{:,}".format(kpi["주문수"]) }}건</strong></div>
+    <div class="card"><span>평균 주문액</span><strong>{{ "{:,.0f}".format(kpi["평균주문액"]) }}원</strong></div>
+  </section>
+
+  <section class="chart" aria-label="종합 2 재사용 차트">
+    <h2>이탈 여부별 월 요금 분포</h2>
+    {{ chart_html | safe }}
+  </section>
+
+  <section>
+    <h2>카테고리별 매출</h2>
+    <table>
+      <thead><tr><th>카테고리</th><th>매출액</th></tr></thead>
+      <tbody>
+      {% for row in by_category %}
+        <tr><td>{{ row.category }}</td><td>{{ "{:,.0f}".format(row.amount) }}원</td></tr>
+      {% else %}
+        <tr><td colspan="2">표시할 데이터가 없습니다.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</body>
+</html>
