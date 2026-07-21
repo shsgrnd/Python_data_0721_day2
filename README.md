@@ -1,0 +1,1 @@
+# skala_python_day2
